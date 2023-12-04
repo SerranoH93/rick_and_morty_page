@@ -10,7 +10,9 @@ export default function Detail(props) {
     const {id} = useParams();
     const [character, setCharacter] = useState({});
     useEffect(() => {
-        axios(`${URL}/${id}?key=${APY_KEY}`).then(
+        //axios(`${URL}/${id}?key=${APY_KEY}`)
+        axios(`http://localhost:3001/rickandmorty/character/${id}`)
+        .then(
             ({ data }) => {
                 if (data.name) {
                     setCharacter(data);
