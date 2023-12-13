@@ -24,27 +24,25 @@ function App() {
 
    const [characters, setCharacters] = useState([]);
 
-   function onSearch(id) {
-      const characterId = characters.filter(
-         char => char.id === Number(id)
-      )
-
-      if (characterId.length) {
-         return alert(`${characterId[0].name} ya existe`);
-      }
-
-      //axios(`${URL}/${id}?key=${APY_KEY}`)
-      axios(`http://localhost:3001/rickandmorty/character/${id}`)
-      .then(
-         ({ data }) => {
-            if (data.name) {
-               setCharacters((oldChars) => [...oldChars, data]);
-            } else {
-               window.alert('¡El ID debe ser un número entre 1 y 826!');
-            }
+   async function onSearch(id) {
+      try {
+         const characterId = characters.filter(
+            char => char.id === Number(id)
+         )
+         if (characterId.length) {
+            return alert(`${characterId[0].name} ya existe`);
          }
-      );
-      navigate("/home");
+
+         const { data } = await axios(`http://localhost:3001/rickandmorty/character/${id}`);
+         if (data.name) {
+            setCharacters([...characters, data]);
+            navigate("/home");
+         } else {
+            alert('¡El ID debe ser un número entre 1 y 826!');
+         }
+      } catch (error) {
+         alert(error.message);
+      }
    }
    
    const onClose = id => {
@@ -57,20 +55,20 @@ function App() {
    const EMAIL = 'alejandro_0793@hotmail.com';
    const PASSWORD = '123456';
 
-   function login(userData) {
-      const { email, password } = userData;
-      const URL = 'http://localhost:3001/rickandmorty/login/';
-      axios(URL + `?email=${email}&password=${password}`)
-      .then(({ data }) => {
-         const { access } = data;
-         if (access) {
-            setAccess(data);
-            access && navigate('/home');
+   async function login(userData) {
+      try{
+         const { email, password } = userData;
+         const URL = 'http://localhost:3001/rickandmorty/login/';
+         const { data } = await axios(URL + `?email=${email}&password=${password}`);
+         if (data.access) {
+            setAccess(data.access);
+            navigate('/home');
          } else {
             alert("Credenciales incorrectas!");
          }
-         
-      });
+      } catch (error) {
+         alert(error.message);
+      }      
    }
 
    useEffect(() => {
