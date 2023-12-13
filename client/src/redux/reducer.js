@@ -17,19 +17,15 @@ export default function reducer(state = initialState, { type, payload }) {
         case ADD_FAV: {
             return {
                 ...state,
-                allCharacters: [...state.allCharacters, payload],
-                myFavorites: [...state.allCharacters, payload]
-            }
+                myFavorites: payload,
+                allCharacters:  payload
+            };
         }
-        case REMOVE_FAV: {
-            const filteredFavs = state.allCharacters.filter(
-                favorite => favorite.id !== Number(payload)
-            );
+        case REMOVE_FAV: {            
             return {
-                ...state,
-                allCharacters: filteredFavs,
-                myFavorites: filteredFavs
-            }
+                ...state, 
+                myFavorites: payload
+            };
         }
         case FILTER: {
             //* { type: FILTER, payload: "FEMALE" }
